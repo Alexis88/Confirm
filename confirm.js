@@ -75,13 +75,6 @@ let Confirm = {
 		//Botón NO
 		Confirm.no = Confirm.buttons("No");
 
-		//Contenedor de los botones
-		Confirm.container = document.createElement("p");
-		Confirm.container.style.display = "flex";
-		Confirm.container.style.alignItems = "center";
-		Confirm.container.style.justifyContent = "center";
-		Confirm.container.style.margin = "1px";
-
 		//La pregunta
 		Confirm.question = document.createElement("span");
 		Confirm.question.style.display = "block";
@@ -90,6 +83,13 @@ let Confirm = {
 		Confirm.question.style.userSelect = "none";
 		Confirm.question.style.fontWeight = "bold";
 		Confirm.question.textContent = Confirm.pregunta;	
+		
+		//Contenedor de los botones
+		Confirm.container = document.createElement("p");
+		Confirm.container.style.display = "flex";
+		Confirm.container.style.alignItems = "center";
+		Confirm.container.style.justifyContent = "center";
+		Confirm.container.style.margin = "1px";
 
 		//Se adhieren los botones al contenedor
 		Confirm.container.appendChild(Confirm.yes);
