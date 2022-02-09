@@ -1,2 +1,2 @@
 # Confirm
-Cuadro personalizado que emula el funcionamiento del método window.confirm()
+Genera un cuadro personalizado que emula el funcionamiento del método window.confirm()
