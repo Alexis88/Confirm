@@ -1,4 +1,4 @@
-/*
+/**
  * Confirm personalizado
  *
  * Este script genera un cuadro emergente que emula al cuadro de confirmación del método window.confirm()
