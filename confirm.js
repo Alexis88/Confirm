@@ -3,10 +3,7 @@
  *
  * Este script genera un cuadro emergente que emula al cuadro de confirmación del método window.confirm()
  *
- * MODO DE USO:
- *
- * Confirm.go("La pregunta de confirmación", Una función de llamada de retorno (opcional));
- *
+ * MODO DE USO: Confirm.go("La pregunta de confirmación", Una función de llamada de retorno (opcional));
  *
  * @author		Alexis López Espinoza
  * @version		1.0
