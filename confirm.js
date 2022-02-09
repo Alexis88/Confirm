@@ -19,7 +19,7 @@ let Confirm = {
 	state: true, //Comodín que controla la creación de cuadros de confirmación
 	go: (pregunta, callback) => {
 		//Se almacenan la pregunta y la llamada de retorno
-		Confirm.pregunta = pregunta;
+		Confirm.pregunta = String(pregunta);
 		Confirm.callback = callback || null;
 		
 		//Si no hay otro cuadro de confirmación, se procede a mostrar uno nuevo
