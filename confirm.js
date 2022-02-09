@@ -118,7 +118,7 @@ let Confirm = {
 		//Si se pulsa el botón SÍ, se ocultan el fondo y la pregunta y se ejecuta la llamada de retorno
 		Confirm.yes.addEventListener("click", () => {
 			Confirm.hide();
-			if (Confirm.callback && {}.toString.call(Confirm.callback) == "[object Function]") && Confirm.callback();
+			if (Confirm.callback && {}.toString.call(Confirm.callback) == "[object Function]") Confirm.callback();
 			else return true;
 		}, false);
 
