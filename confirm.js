@@ -8,9 +8,9 @@
  * @author		Alexis López Espinoza
  * @version		1.0
  * @param		{pregunta}		String		La pregunta de confirmación
- * @param		{callback}		Function	Una función de llamada de retorno que se ejecutará si el usuario pulsa el botón SÍ
- *											En caso de no pasar una llamada de retorno, se devolverá true
- *											Esta llamada de retorno es opcional
+ * @param		{callback}		Function	Una función de llamada de retorno que se ejecutará si el usuario
+ * 											pulsa el botón SÍ. En caso de no pasar una llamada de retorno, 
+ *											se devolverá true. Esta llamada de retorno es opcional.
  */
 
 "use strict";
