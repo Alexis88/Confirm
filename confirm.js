@@ -21,14 +21,14 @@ let Confirm = {
 		//Se almacenan la pregunta y la llamada de retorno
 		Confirm.pregunta = String(pregunta);
 		Confirm.callback = callback || null;
-		
+
 		//Si no hay otro cuadro de confirmación, se procede a mostrar uno nuevo
 		if (Confirm.state){
 			Confirm.show();
 		}
 		//Caso contrario, se le informa al usuario que tiene que resolver la confirmación pendiente
 		else{
-			alert("Resuelva la pregunta de confirmación pendiente");
+			Notification.msg("Resuelva la pregunta de confirmación pendiente");
 		}
 	},
 
@@ -82,14 +82,14 @@ let Confirm = {
 		Confirm.question.style.marginBottom = "1%";
 		Confirm.question.style.userSelect = "none";
 		Confirm.question.style.fontWeight = "bold";
-		Confirm.question.textContent = Confirm.pregunta;	
-		
+		Confirm.question.textContent = Confirm.pregunta;
+
 		//Contenedor de los botones
 		Confirm.container = document.createElement("p");
 		Confirm.container.style.display = "flex";
 		Confirm.container.style.alignItems = "center";
 		Confirm.container.style.justifyContent = "center";
-		Confirm.container.style.margin = "1px";
+		Confirm.container.style.margin = "1px";	
 
 		//Se adhieren los botones al contenedor
 		Confirm.container.appendChild(Confirm.yes);
@@ -155,6 +155,7 @@ let Confirm = {
 		Confirm.back.style.width = window.innerWidth + "px";
 		Confirm.back.style.height = window.innerHeight + "px";
 		Confirm.front.style.width = Confirm.width();
+		Confirm.back.style.top = 0;
 	},
 
 	buttons: (text) => {
