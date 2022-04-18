@@ -82,6 +82,7 @@ let Confirm = {
 		Confirm.question.style.marginBottom = "1%";
 		Confirm.question.style.userSelect = "none";
 		Confirm.question.style.fontWeight = "bold";
+		Confirm.question.style.color = "#1a1a1a";
 		Confirm.question.textContent = Confirm.pregunta;
 
 		//Contenedor de los botones
