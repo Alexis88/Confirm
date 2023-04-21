@@ -142,14 +142,7 @@ let Confirm = {
 		}, 200);
 	},
 
-	width: _ => {
-		if (window.matchMedia("(min-width: 920px)").matches){
-			return "350px";
-		}
-		else {
-			return "250px";
-		}
-	},
+	width: _ => window.matchMedia("(min-width: 920px)").matches ? "350px" : "250px",
 
 	resize: _ => {
 		Confirm.back.style.width = window.innerWidth + "px";
