@@ -32,7 +32,7 @@ let Confirm = {
 		}
 	},
 
-	show: () => {
+	show: _ => {
 		//Se almacena el valor actual de la propiedad overflow del document
 		Confirm.overflow = getComputedStyle(document.body).overflow;
 
@@ -40,7 +40,7 @@ let Confirm = {
 		Confirm.back = document.createElement("div");
 		Confirm.back.style.width = window.innerWidth + "px";
 		Confirm.back.style.height = window.innerHeight + "px";
-		Confirm.back.style.backgroundColor = "black";
+		Confirm.back.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 		Confirm.back.style.top = 0;
 		Confirm.back.style.left = 0;
 		Confirm.back.style.margin = 0;
@@ -50,7 +50,7 @@ let Confirm = {
 		Confirm.back.style.justifyContent = "center";
 		Confirm.back.style.opacity = 0;
 		Confirm.back.style.transition = "all ease .15s";
-		Confirm.back.style.zIndex = "8888 !important";
+		Confirm.back.style.zIndex = "9999";
 
 		//Cuadro de la pregunta
 		Confirm.front = document.createElement("div");
@@ -67,7 +67,6 @@ let Confirm = {
 		Confirm.front.style.textAlign = "center";
 		Confirm.front.style.flexDirection = "column";
 		Confirm.front.style.transition = "all ease .15s";
-		Confirm.front.style.zIndex = "9999 !important";
 
 		//Botón SÍ
 		Confirm.yes = Confirm.buttons("Sí");
@@ -112,12 +111,10 @@ let Confirm = {
 		document.body.style.overflow = "hidden";
 
 		//Se da visibilidad al fondo y pregunta
-		setTimeout(() => {
-			Confirm.back.style.opacity = .95;
-		}, 100);
+		setTimeout(_ => Confirm.back.style.opacity = .95, 100);
 
 		//Si se pulsa el botón SÍ, se ocultan el fondo y la pregunta y se ejecuta la llamada de retorno
-		Confirm.yes.addEventListener("click", () => {
+		Confirm.yes.addEventListener("click", _ => {
 			Confirm.hide();
 			if (Confirm.callback && {}.toString.call(Confirm.callback) == "[object Function]") Confirm.callback();
 			else return true;
@@ -127,23 +124,25 @@ let Confirm = {
 		window.addEventListener("orientationchange", Confirm.resize, false);
 		window.addEventListener("resize", Confirm.resize, false);
 
-		//Si se pulsa el botón NO o en el fondo oscuro, se cierran el fondo oscuro y el cuadro de confirmación
+		//Si se pulsa el botón NO, se cierran el fondo oscuro y el cuadro de confirmación
 		Confirm.no.addEventListener("click", Confirm.hide, false);
 	},
 
-	hide: () => {
+	hide: _ => {
 		//Se desvanecen el fondo y su contenido
 		Confirm.back.style.opacity = 0;
 
-		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido, se devuelve al documento sus barras de desplazamiento y el valor del comodín vuelve a true
-		setTimeout(() => {
-			document.body.removeChild(Confirm.back);
-			document.body.style.overflow = Confirm.overflow;
+		//Se devuelve al documento sus barras de desplazamiento
+		document.body.style.overflow = Confirm.overflow;
+
+		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
+		setTimeout(_ => {
+			document.body.removeChild(Confirm.back);					
 			Confirm.flag = true;
 		}, 200);
 	},
 
-	width: () => {
+	width: _ => {
 		if (window.matchMedia("(min-width: 920px)").matches){
 			return "350px";
 		}
@@ -152,17 +151,17 @@ let Confirm = {
 		}
 	},
 
-	resize: () => {
+	resize: _ => {
 		Confirm.back.style.width = window.innerWidth + "px";
 		Confirm.back.style.height = window.innerHeight + "px";
 		Confirm.front.style.width = Confirm.width();
 		Confirm.back.style.top = 0;
 	},
 
-	buttons: (text) => {
+	buttons: text => {
 		let button = document.createElement("b");
 		
-		button.style.backgroundColor = "#262626";
+		button.style.backgroundColor = "#305165";
 		button.style.color = "snow";
 		button.style.fontWeight = "bold";
 		button.style.cursor = "pointer";
@@ -176,13 +175,8 @@ let Confirm = {
 		button.style.borderRadius = "5px";
 		button.textContent = text;		
 
-		button.addEventListener("mouseover", () => {
-			button.style.backgroundColor = "#191919";
-		}, false);
-
-		button.addEventListener("mouseout", () => {
-			button.style.backgroundColor = "#262626";
-		}, false);		
+		button.addEventListener("mouseover", _ => button.style.backgroundColor = "#191919", false);
+		button.addEventListener("mouseout", _ => button.style.backgroundColor = "#305165", false);		
 
 		return button;
 	}
