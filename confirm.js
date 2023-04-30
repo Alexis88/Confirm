@@ -163,8 +163,8 @@ let Confirm = {
 		button.style.marginRight = "5px";
 		button.style.paddingTop = "7.5px";
 		button.style.paddingBottom = "7.5px";
-		button.style.paddingRight = "12.5px";
-		button.style.paddingLeft = "12.5px";
+		button.style.paddingRight = "20px";
+		button.style.paddingLeft = "20px";
 		button.style.borderRadius = "5px";
 		button.textContent = text;		
 
