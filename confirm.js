@@ -40,7 +40,7 @@ let Confirm = {
 		Confirm.back = document.createElement("div");
 		Confirm.back.style.width = window.innerWidth + "px";
 		Confirm.back.style.height = window.innerHeight + "px";
-		Confirm.back.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+		Confirm.back.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
 		Confirm.back.style.top = 0;
 		Confirm.back.style.left = 0;
 		Confirm.back.style.margin = 0;
@@ -48,7 +48,6 @@ let Confirm = {
 		Confirm.back.style.display = "flex";
 		Confirm.back.style.alignItems = "center";
 		Confirm.back.style.justifyContent = "center";
-		Confirm.back.style.opacity = 0;
 		Confirm.back.style.transition = "all ease .15s";
 		Confirm.back.style.zIndex = "9999";
 
@@ -109,9 +108,6 @@ let Confirm = {
 
 		//Se retiran las barras de desplazamiento del documento
 		document.body.style.overflow = "hidden";
-
-		//Se da visibilidad al fondo y pregunta
-		setTimeout(_ => Confirm.back.style.opacity = .95, 100);
 
 		//Si se pulsa el botón SÍ, se ocultan el fondo y la pregunta y se ejecuta la llamada de retorno
 		Confirm.yes.addEventListener("click", _ => {
