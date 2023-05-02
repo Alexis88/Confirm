@@ -51,6 +51,17 @@ let Confirm = {
 		Confirm.back.style.transition = "all ease .15s";
 		Confirm.back.style.zIndex = "9999";
 
+		//Animación para mostrar el cuadro de confirmación
+		Confirm.back.animate([{
+			transform: "scale(0)",
+			opacity: 0
+		}, {
+			transform: "scale(1)",
+			opacity: 1
+		}], {
+			duration: 400
+		});
+
 		//Cuadro de la pregunta
 		Confirm.front = document.createElement("div");
 		Confirm.front.style.width = Confirm.width();
@@ -125,7 +136,18 @@ let Confirm = {
 	},
 
 	hide: _ => {
-		//Se desvanecen el fondo y su contenido
+		//Se oculta el cuadro de confirmación con un efecto de animación
+		Confirm.back.animate([{
+			transform: "scale(1)",
+			opacity: 1
+		}, {
+			transform: "scale(0)",
+			opacity: 0
+		}], {
+			duration: 400
+		});
+
+		//Se oculta el cuadro de confirmación del todo (para evitar el problema del parpadeo)
 		Confirm.back.style.opacity = 0;
 
 		//Se devuelve al documento sus barras de desplazamiento
