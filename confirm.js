@@ -53,10 +53,8 @@ let Confirm = {
 
 		//Animación para mostrar el cuadro de confirmación
 		Confirm.back.animate([{
-			transform: "scale(0)",
 			opacity: 0
 		}, {
-			transform: "scale(1)",
 			opacity: 1
 		}], {
 			duration: 400
@@ -114,6 +112,17 @@ let Confirm = {
 		//Se adhiere el cuadro de confirmación al fondo
 		Confirm.back.appendChild(Confirm.front);
 
+		//Animación para mostrar el contenido central
+		Confirm.front.animate([{
+			transform: "scaleY(0)",
+			opacity: 0
+		}, {
+			transform: "scaleY(1)",
+			opacity: 1
+		}], {
+			duration: 400
+		});
+
 		//Se adhiere el fondo al documento
 		document.body.appendChild(Confirm.back);
 
@@ -138,10 +147,19 @@ let Confirm = {
 	hide: _ => {
 		//Se oculta el cuadro de confirmación con un efecto de animación
 		Confirm.back.animate([{
-			transform: "scale(1)",
 			opacity: 1
 		}, {
-			transform: "scale(0)",
+			opacity: 0
+		}], {
+			duration: 400
+		});
+
+		//Se oculta el contenido central
+		Confirm.front.animate([{
+			transform: "scaleY(1)",
+			opacity: 1
+		}, {
+			transform: "scaleY(0)",
 			opacity: 0
 		}], {
 			duration: 400
