@@ -5,6 +5,8 @@
  *
  * MODO DE USO: Confirm.go("La pregunta de confirmación", Una función de llamada de retorno (opcional));
  *
+ * Se empleó el archivo notification.js: https://github.com/Alexis88/Notification
+ *
  * @author		Alexis López Espinoza
  * @version		1.0
  * @param		{pregunta}		String		La pregunta de confirmación
