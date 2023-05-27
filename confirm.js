@@ -22,7 +22,7 @@ let Confirm = {
 		 * 
 		 * options.pregunta: Texto de la pregunta a mostrar
 		 * options.callback: Llamada de retorno a ejecutarse luego de pulsar el botón de envío
-		 * options.content: Objeto con colores para el fondo del cuadro y la pregunta
+		 * options.content: Objeto con propiedades CSS para personalizar los elementos del cuadro
 		 */
 	){
 		//Si no se ha recibido el objeto con las opciones de configuración, se aborta la ejecución
@@ -74,8 +74,10 @@ let Confirm = {
 		//Cuadro de la pregunta
 		Confirm.front = document.createElement("div");
 		Confirm.front.style.width = Confirm.width();
-		Confirm.front.style.backgroundColor = Confirm.content?.front?.length ? Confirm.content.front : "#FFFFEF";
-		Confirm.front.style.borderRadius = "5px";
+		Confirm.front.style.backgroundColor = Confirm.content?.front?.backgroundColor?.length ? Confirm.content.front.backgroundColor : "#FFFFEF";
+		Confirm.front.style.boxShadow = "0 3px 10px rgb(0 0 0 / 0.2)";
+		Confirm.front.style.border = Confirm.content?.front?.border?.length ? Confirm.content.front.border : "";
+		Confirm.front.style.borderRadius = Confirm.content?.front?.borderRadius?.length ? Confirm.content.front.borderRadius : "5px";
 		Confirm.front.style.paddingTop = "1%";
 		Confirm.front.style.paddingBottom = "1%";
 		Confirm.front.style.paddingRight = "2.5%";
@@ -100,7 +102,7 @@ let Confirm = {
 		Confirm.question.style.marginBottom = "1%";
 		Confirm.question.style.userSelect = "none";
 		Confirm.question.style.fontWeight = "bold";
-		Confirm.question.style.color = Confirm.content?.question?.length ? Confirm.content?.question : "#1a1a1a";
+		Confirm.question.style.color = Confirm.content?.question?.color?.length ? Confirm.content.question.color : "#1a1a1a";
 		Confirm.question.textContent = Confirm.pregunta;
 
 		//Contenedor de los botones
