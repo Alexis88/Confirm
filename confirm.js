@@ -3,26 +3,35 @@
  *
  * Este script genera un cuadro emergente que emula al cuadro de confirmación del método window.confirm()
  *
- * MODO DE USO: Confirm.go("La pregunta de confirmación", Una función de llamada de retorno (opcional));
+ * MODO DE USO: Confirm.go({Opciones de configuración});
  *
  * Se empleó el archivo notification.js: https://github.com/Alexis88/Notification
  *
  * @author		Alexis López Espinoza
- * @version		1.0
- * @param		{pregunta}		String		La pregunta de confirmación
- * @param		{callback}		Function	Una función de llamada de retorno que se ejecutará si el usuario
- * 											pulsa el botón SÍ. En caso de no pasar una llamada de retorno, 
- *											se devolverá true. Esta llamada de retorno es opcional.
+ * @version		2.0
+ * @param		options				Plain Object
  */
 
 "use strict";
 
 let Confirm = {
 	state: true, //Comodín que controla la creación de cuadros de confirmación
-	go: (pregunta, callback) => {
+	go: function(
+		options
+		/*** OPCIONES DE CONFIGURACIÓN ***
+		 * 
+		 * options.pregunta: Texto de la pregunta a mostrar
+		 * options.callback: Llamada de retorno a ejecutarse luego de pulsar el botón de envío
+		 * options.content: Objeto con colores para el fondo del cuadro y la pregunta
+		 */
+	){
+		//Si no se ha recibido el objeto con las opciones de configuración, se aborta la ejecución
+		if (!arguments.length || {}.toString.call(arguments[0]) !== "[object Object]") return;
+
 		//Se almacenan la pregunta y la llamada de retorno
-		Confirm.pregunta = String(pregunta);
-		Confirm.callback = callback || null;
+		Confirm.pregunta = String(options.pregunta);
+		Confirm.callback = options.callback || null;
+		Confirm.content = options.content || null;
 
 		//Si no hay otro cuadro de confirmación, se procede a mostrar uno nuevo
 		if (Confirm.state){
@@ -65,7 +74,7 @@ let Confirm = {
 		//Cuadro de la pregunta
 		Confirm.front = document.createElement("div");
 		Confirm.front.style.width = Confirm.width();
-		Confirm.front.style.backgroundColor = "snow";
+		Confirm.front.style.backgroundColor = Confirm.content?.front?.length ? Confirm.content.front : "#FFFFEF";
 		Confirm.front.style.borderRadius = "5px";
 		Confirm.front.style.paddingTop = "1%";
 		Confirm.front.style.paddingBottom = "1%";
@@ -91,7 +100,7 @@ let Confirm = {
 		Confirm.question.style.marginBottom = "1%";
 		Confirm.question.style.userSelect = "none";
 		Confirm.question.style.fontWeight = "bold";
-		Confirm.question.style.color = "#1a1a1a";
+		Confirm.question.style.color = Confirm.content?.question?.length ? Confirm.content?.question : "#1a1a1a";
 		Confirm.question.textContent = Confirm.pregunta;
 
 		//Contenedor de los botones
@@ -193,7 +202,7 @@ let Confirm = {
 		let button = document.createElement("b");
 		
 		button.style.backgroundColor = "#305165";
-		button.style.color = "snow";
+		button.style.color = "#FFFFEF";
 		button.style.fontWeight = "bold";
 		button.style.cursor = "pointer";
 		button.style.userSelect = "none";
@@ -203,6 +212,7 @@ let Confirm = {
 		button.style.paddingBottom = "7.5px";
 		button.style.paddingRight = "20px";
 		button.style.paddingLeft = "20px";
+		button.style.border = ".1rem solid #FFFFEF";
 		button.style.borderRadius = "5px";
 		button.textContent = text;		
 
