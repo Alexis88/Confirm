@@ -26,11 +26,14 @@ let Confirm = {
 		 */
 	){
 		//Si no se ha recibido el objeto con las opciones de configuración, se aborta la ejecución
-		if (!arguments.length || {}.toString.call(arguments[0]) !== "[object Object]") return;
+		if (!arguments.length || {}.toString.call(arguments[0]) !== "[object Object]"){
+			throw new Error("Tiene que añadir las opciones de configuración del cuadro");
+			return;
+		}
 
 		//Se almacenan la pregunta y la llamada de retorno
-		Confirm.pregunta = String(options.pregunta);
-		Confirm.callback = options.callback || null;
+		Confirm.pregunta = options.pregunta;
+		Confirm.callback = options.callback && {}.toString.call(options.callback) === "[object Function]" ? options.callback : null;
 		Confirm.content = options.content || null;
 
 		//Si no hay otro cuadro de confirmación, se procede a mostrar uno nuevo
@@ -145,7 +148,7 @@ let Confirm = {
 		//Si se pulsa el botón SÍ, se ocultan el fondo y la pregunta y se ejecuta la llamada de retorno
 		Confirm.yes.addEventListener("click", _ => {
 			Confirm.hide();
-			if (Confirm.callback && {}.toString.call(Confirm.callback) == "[object Function]") Confirm.callback();
+			if (Confirm.callback) Confirm.callback();
 			else return true;
 		}, false);
 
