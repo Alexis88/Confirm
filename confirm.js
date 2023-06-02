@@ -9,26 +9,30 @@
  *
  * @author		Alexis López Espinoza
  * @version		2.0
- * @param		options				Plain Object
+ * @param		options			Plain Object
  */
 
 "use strict";
 
-let Confirm = {
+const Confirm = {
 	state: true, //Comodín que controla la creación de cuadros de confirmación
-	go: function(
-		options
+	go: options => {
 		/*** OPCIONES DE CONFIGURACIÓN ***
 		 * 
 		 * options.pregunta: Texto de la pregunta a mostrar
 		 * options.callback: Llamada de retorno a ejecutarse luego de pulsar el botón de envío
 		 * options.content: Objeto con propiedades CSS para personalizar los elementos del cuadro
 		 */
-	){
-		//Si no se ha recibido el objeto con las opciones de configuración, se aborta la ejecución
-		if (!arguments.length || {}.toString.call(arguments[0]) !== "[object Object]"){
-			throw new Error("Tiene que añadir las opciones de configuración del cuadro");
+
+		//Si hay otro cuadro mostrándose, se le avisa al usuario que tiene que resolverlo
+		if (!Confirm.state){
+			Notification.msg("Resuelva la pregunta pendiente");
 			return;
+		}
+
+		//Si no se ha recibido el objeto con las opciones de configuración, se aborta la ejecución
+		if (!options || {}.toString.call(options) !== "[object Object]"){
+			throw new Error("Tiene que añadir las opciones de configuración del cuadro");
 		}
 
 		//Se almacenan la pregunta y la llamada de retorno
@@ -36,14 +40,8 @@ let Confirm = {
 		Confirm.callback = options.callback && {}.toString.call(options.callback) === "[object Function]" ? options.callback : null;
 		Confirm.content = options.content || null;
 
-		//Si no hay otro cuadro de confirmación, se procede a mostrar uno nuevo
-		if (Confirm.state){
-			Confirm.show();
-		}
-		//Caso contrario, se le informa al usuario que tiene que resolver la confirmación pendiente
-		else{
-			Notification.msg("Resuelva la pregunta de confirmación pendiente");
-		}
+		//Se muestra el cuadro
+		Confirm.show();
 	},
 
 	show: _ => {
@@ -51,46 +49,10 @@ let Confirm = {
 		Confirm.overflow = getComputedStyle(document.body).overflow;
 
 		//Fondo
-		Confirm.back = document.createElement("div");
-		Confirm.back.style.width = window.innerWidth + "px";
-		Confirm.back.style.height = window.innerHeight + "px";
-		Confirm.back.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-		Confirm.back.style.top = 0;
-		Confirm.back.style.left = 0;
-		Confirm.back.style.margin = 0;
-		Confirm.back.style.position = "fixed";		
-		Confirm.back.style.display = "flex";
-		Confirm.back.style.alignItems = "center";
-		Confirm.back.style.justifyContent = "center";
-		Confirm.back.style.transition = "all ease .15s";
-		Confirm.back.style.zIndex = "9999";
-
-		//Animación para mostrar el cuadro de confirmación
-		Confirm.back.animate([{
-			opacity: 0
-		}, {
-			opacity: 1
-		}], {
-			duration: 400
-		});
+		Confirm.createBack();
 
 		//Cuadro de la pregunta
-		Confirm.front = document.createElement("div");
-		Confirm.front.style.width = Confirm.width();
-		Confirm.front.style.backgroundColor = Confirm.content?.front?.backgroundColor?.length ? Confirm.content.front.backgroundColor : "#FFFFEF";
-		Confirm.front.style.boxShadow = "0 3px 10px rgb(0 0 0 / 0.2)";
-		Confirm.front.style.border = Confirm.content?.front?.border?.length ? Confirm.content.front.border : "";
-		Confirm.front.style.borderRadius = Confirm.content?.front?.borderRadius?.length ? Confirm.content.front.borderRadius : "5px";
-		Confirm.front.style.paddingTop = "1%";
-		Confirm.front.style.paddingBottom = "1%";
-		Confirm.front.style.paddingRight = "2.5%";
-		Confirm.front.style.paddingLeft = "2.5%";
-		Confirm.front.style.display = "flex";
-		Confirm.front.style.alignItems = "center";
-		Confirm.front.style.justifyContent = "center";
-		Confirm.front.style.textAlign = "center";
-		Confirm.front.style.flexDirection = "column";
-		Confirm.front.style.transition = "all ease .15s";
+		Confirm.createFront();
 
 		//Botón SÍ
 		Confirm.yes = Confirm.buttons("Sí");
@@ -99,21 +61,10 @@ let Confirm = {
 		Confirm.no = Confirm.buttons("No");
 
 		//La pregunta
-		Confirm.question = document.createElement("span");
-		Confirm.question.style.display = "block";
-		Confirm.question.style.margin = "0 auto";
-		Confirm.question.style.marginBottom = "1%";
-		Confirm.question.style.userSelect = "none";
-		Confirm.question.style.fontWeight = "bold";
-		Confirm.question.style.color = Confirm.content?.question?.color?.length ? Confirm.content.question.color : "#1a1a1a";
-		Confirm.question.textContent = Confirm.pregunta;
+		Confirm.createQuestion();
 
 		//Contenedor de los botones
-		Confirm.container = document.createElement("p");
-		Confirm.container.style.display = "flex";
-		Confirm.container.style.alignItems = "center";
-		Confirm.container.style.justifyContent = "center";
-		Confirm.container.style.margin = "1px";	
+		Confirm.createContainer();
 
 		//Se adhieren los botones al contenedor
 		Confirm.container.appendChild(Confirm.yes);
@@ -129,15 +80,7 @@ let Confirm = {
 		Confirm.back.appendChild(Confirm.front);
 
 		//Animación para mostrar el contenido central
-		Confirm.front.animate([{
-			transform: "scaleY(0)",
-			opacity: 0
-		}, {
-			transform: "scaleY(1)",
-			opacity: 1
-		}], {
-			duration: 400
-		});
+		Confirm.animateFront();
 
 		//Se adhiere el fondo al documento
 		document.body.appendChild(Confirm.back);
@@ -145,6 +88,14 @@ let Confirm = {
 		//Se retiran las barras de desplazamiento del documento
 		document.body.style.overflow = "hidden";
 
+		//Se cambia el valor del comodín que verifica la existencia de un cuadro sin resolver
+		Confirm.state = false;
+
+		//Configuración de eventos
+		Confirm.events();
+	},
+
+	events: _ => {
 		//Si se pulsa el botón SÍ, se ocultan el fondo y la pregunta y se ejecuta la llamada de retorno
 		Confirm.yes.addEventListener("click", _ => {
 			Confirm.hide();
@@ -160,6 +111,86 @@ let Confirm = {
 		Confirm.no.addEventListener("click", Confirm.hide, false);
 	},
 
+	createBack: _ => {
+		Confirm.back = document.createElement("div");
+		Confirm.back.style = `
+			width: ${window.innerWidth}px;
+			height: ${window.innerHeight}px;
+			background-color: rgba(0, 0, 0, .6);
+			top: 0;
+			left: 0;
+			margin: 0;
+			position: fixed;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all ease .15s;
+			z-index: 9999;
+		`;
+
+		//Animación para mostrar el cuadro de confirmación
+		Confirm.back.animate([{
+			opacity: 0
+		}, {
+			opacity: 1
+		}], {
+			duration: 400
+		});
+	},
+
+	createFront: _ => {
+		Confirm.front = document.createElement("div");
+		Confirm.front.style = `
+			width: ${Confirm.width()};
+			background-color: ${Confirm.content?.front?.backgroundColor ?? "#FFFFEF"};
+			box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+			border: ${Confirm.content?.front?.border ?? 0};
+			border-radius: ${Confirm.content?.front?.borderRadius ?? "5px"};
+			padding: 1% 2.5%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			flex-direction: column;
+			transition: all ease .15s;
+		`;
+	},
+
+	animateFront: _ => {
+		Confirm.front.animate([{
+			transform: "scaleY(0)",
+			opacity: 0
+		}, {
+			transform: "scaleY(1)",
+			opacity: 1
+		}], {
+			duration: 400
+		});
+	},
+
+	createQuestion: _ => {
+		Confirm.question = document.createElement("span");
+		Confirm.question.style = `
+			display: block;
+			margin: 0 auto;
+			margin-bottom: 1%;
+			user-select: none;
+			font-weight: bold;
+			color: ${Confirm.content?.question?.color ?? "#1a1a1a"};
+		`;
+		Confirm.question.textContent = Confirm.pregunta;
+	},
+
+	createContainer: _ => {
+		Confirm.container = document.createElement("p");
+		Confirm.container.style = `
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 1px;
+		`;
+	},
+
 	hide: _ => {
 		//Se oculta el cuadro de confirmación con un efecto de animación
 		Confirm.back.animate([{
@@ -167,7 +198,8 @@ let Confirm = {
 		}, {
 			opacity: 0
 		}], {
-			duration: 400
+			duration: 400,
+			fill: "forwards"
 		});
 
 		//Se oculta el contenido central
@@ -178,19 +210,17 @@ let Confirm = {
 			transform: "scaleY(0)",
 			opacity: 0
 		}], {
-			duration: 400
+			duration: 400,
+			fill: "forwards"
 		});
-
-		//Se oculta el cuadro de confirmación del todo (para evitar el problema del parpadeo)
-		Confirm.back.style.opacity = 0;
 
 		//Se devuelve al documento sus barras de desplazamiento
 		document.body.style.overflow = Confirm.overflow;
 
 		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
 		setTimeout(_ => {
-			document.body.removeChild(Confirm.back);					
-			Confirm.flag = true;
+			Confirm.back && Confirm.back.remove();	
+			Confirm.state = true;
 		}, 200);
 	},
 
@@ -204,21 +234,20 @@ let Confirm = {
 	},
 
 	buttons: text => {
-		let button = document.createElement("b");
-		
-		button.style.backgroundColor = "#305165";
-		button.style.color = "#FFFFEF";
-		button.style.fontWeight = "bold";
-		button.style.cursor = "pointer";
-		button.style.userSelect = "none";
-		button.style.display = "inline-block";
-		button.style.marginRight = "5px";
-		button.style.paddingTop = "7.5px";
-		button.style.paddingBottom = "7.5px";
-		button.style.paddingRight = "20px";
-		button.style.paddingLeft = "20px";
-		button.style.border = ".1rem solid #FFFFEF";
-		button.style.borderRadius = "5px";
+		const button = document.createElement("b");
+
+		button.style = `
+			background-color: #305165;
+			color: #FFFFEF;
+			font-weight: bold;
+			cursor: pointer;
+			user-select: none;
+			display: inline-block;
+			margin-right: 5px;
+			padding: 7.5px 20px;
+			border: .1rem solid #FFFFEF;
+			border-radius: 5px;
+		`;
 		button.textContent = text;		
 
 		button.addEventListener("mouseover", _ => button.style.backgroundColor = "#191919", false);
