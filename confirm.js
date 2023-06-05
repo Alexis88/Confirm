@@ -67,14 +67,10 @@ const Confirm = {
 		Confirm.createContainer();
 
 		//Se adhieren los botones al contenedor
-		Confirm.container.appendChild(Confirm.yes);
-		Confirm.container.appendChild(Confirm.no);
+		Confirm.container.append(Confirm.yes, Confirm.no);
 
-		//Se adhiere la pregunta al cuadro de confirmación
-		Confirm.front.appendChild(Confirm.question);
-
-		//Se adhiere el contenedor de botones al cuadro de confirmación
-		Confirm.front.appendChild(Confirm.container);		
+		//Se adhiere la pregunta y el contenedor de botones al cuadro de confirmación
+		Confirm.front.append(Confirm.question, Confirm.container);
 
 		//Se adhiere el cuadro de confirmación al fondo
 		Confirm.back.appendChild(Confirm.front);
@@ -103,12 +99,12 @@ const Confirm = {
 			else return true;
 		}, false);
 
-		//Al girar el dispositivo, cambian las dimensiones del fondo
-		window.addEventListener("orientationchange", Confirm.resize, false);
-		window.addEventListener("resize", Confirm.resize, false);
-
 		//Si se pulsa el botón NO, se cierran el fondo oscuro y el cuadro de confirmación
 		Confirm.no.addEventListener("click", Confirm.hide, false);
+
+		//Al girar el dispositivo, cambian las dimensiones del fondo
+		window.addEventListener("orientationchange", Confirm.resize, false);
+		window.addEventListener("resize", Confirm.resize, false);		
 	},
 
 	createBack: _ => {
@@ -217,10 +213,12 @@ const Confirm = {
 		//Se devuelve al documento sus barras de desplazamiento
 		document.body.style.overflow = Confirm.overflow;
 
+		//Se vuelve a permitir la creación de un nuevo cuadro
+		Confirm.state = true;
+
 		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
 		setTimeout(_ => {
-			Confirm.back && Confirm.back.remove();	
-			Confirm.state = true;
+			Confirm.back && Confirm.back.remove();				
 		}, 200);
 	},
 
