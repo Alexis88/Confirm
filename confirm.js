@@ -145,7 +145,6 @@ const Confirm = {
 			padding: 1% 2.5%;
 			display: flex;
 			align-items: center;
-			justify-content: center;
 			text-align: center;
 			flex-direction: column;
 			transition: all ease .15s;
