@@ -45,9 +45,6 @@ const Confirm = {
 	},
 
 	show: _ => {
-		//Se almacena el valor actual de la propiedad overflow del document
-		Confirm.overflow = getComputedStyle(document.body).overflow;
-
 		//Fondo
 		Confirm.createBack();
 
@@ -81,9 +78,6 @@ const Confirm = {
 		//Se adhiere el fondo al documento
 		document.body.appendChild(Confirm.back);
 
-		//Se retiran las barras de desplazamiento del documento
-		document.body.style.overflow = "hidden";
-
 		//Se cambia el valor del comodín que verifica la existencia de un cuadro sin resolver
 		Confirm.state = false;
 
@@ -104,11 +98,19 @@ const Confirm = {
 
 		//Al girar el dispositivo, cambian las dimensiones del fondo
 		window.addEventListener("orientationchange", Confirm.resize, false);
-		window.addEventListener("resize", Confirm.resize, false);		
+		window.addEventListener("resize", Confirm.resize, false);
+		window.addEventListener("scroll", _ => {
+			const confirms = document.querySelectorAll("[id^=confirmBack]");
+
+			if (confirms.length){
+				confirms[confirms.length - 1].scrollIntoView();
+			}
+		}, false);
 	},
 
 	createBack: _ => {
 		Confirm.back = document.createElement("div");
+		Confirm.back.id = `confirmBack-${new Date().getTime()}`;
 		Confirm.back.style = `
 			width: ${window.innerWidth}px;
 			height: ${window.innerHeight}px;
@@ -138,10 +140,10 @@ const Confirm = {
 		Confirm.front = document.createElement("div");
 		Confirm.front.style = `
 			width: ${Confirm.width()};
-			background-color: ${Confirm.content?.front?.backgroundColor ?? "#FFFFEF"};
+			background-color: ${Confirm.content?.front?.backgroundColor?.length ? Confirm.content.front.backgroundColor : "#FFFFEF"};
 			box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-			border: ${Confirm.content?.front?.border ?? 0};
-			border-radius: ${Confirm.content?.front?.borderRadius ?? "5px"};
+			border: ${Confirm.content?.front?.border?.length ? Confirm.content.front.border : 0};
+			border-radius: ${Confirm.content?.front?.borderRadius?.length ? Confirm.content.front.borderRadius : "5px"};
 			padding: 1% 2.5%;
 			display: flex;
 			align-items: center;
@@ -171,7 +173,7 @@ const Confirm = {
 			margin-bottom: 1%;
 			user-select: none;
 			font-weight: bold;
-			color: ${Confirm.content?.question?.color ?? "#1a1a1a"};
+			color: ${Confirm.content?.question?.color?.length ? Confirm.content.question.color : "#1a1a1a"};
 		`;
 		Confirm.question.textContent = Confirm.pregunta;
 	},
@@ -209,23 +211,18 @@ const Confirm = {
 			fill: "forwards"
 		});
 
-		//Se devuelve al documento sus barras de desplazamiento
-		document.body.style.overflow = Confirm.overflow;
-
 		//Se vuelve a permitir la creación de un nuevo cuadro
 		Confirm.state = true;
 
 		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
-		setTimeout(_ => {
-			Confirm.back && Confirm.back.remove();				
-		}, 200);
+		setTimeout(_ => Confirm.back && Confirm.back.remove(), 200);
 	},
 
-	width: _ => window.matchMedia("(min-width: 920px)").matches ? "350px" : "250px",
+	width: _ => window.matchMedia("(min-width: 850px)").matches ? "350px" : "250px",
 
 	resize: _ => {
-		Confirm.back.style.width = window.innerWidth + "px";
-		Confirm.back.style.height = window.innerHeight + "px";
+		Confirm.back.style.width = `${window.innerWidth}px`;
+		Confirm.back.style.height = `${window.innerHeight}px`;
 		Confirm.front.style.width = Confirm.width();
 		Confirm.back.style.top = 0;
 	},
